@@ -1,0 +1,73 @@
+# air bit (0 = first transmitted, MSB of byte 0 in the 9-byte packing) -> codeword, bit (0 = codeword MSB), 49-bit index if data bit (C1 data bits are PN-scrambled on air)
+ 0 C0[ 0] d0
+ 1 C0[18] parity
+ 2 C1[12] parity
+ 3 C2[ 7] d31
+ 4 C0[ 1] d1
+ 5 C0[19] parity
+ 6 C1[13] parity
+ 7 C2[ 8] d32
+ 8 C0[ 2] d2
+ 9 C0[20] parity
+10 C1[14] parity
+11 C2[ 9] d33
+12 C0[ 3] d3
+13 C0[21] parity
+14 C1[15] parity
+15 C2[10] d34
+16 C0[ 4] d4
+17 C0[22] parity
+18 C1[16] parity
+19 C3[ 0] d35
+20 C0[ 5] d5
+21 C0[23] parity
+22 C1[17] parity
+23 C3[ 1] d36
+24 C0[ 6] d6
+25 C1[ 0] d12
+26 C1[18] parity
+27 C3[ 2] d37
+28 C0[ 7] d7
+29 C1[ 1] d13
+30 C1[19] parity
+31 C3[ 3] d38
+32 C0[ 8] d8
+33 C1[ 2] d14
+34 C1[20] parity
+35 C3[ 4] d39
+36 C0[ 9] d9
+37 C1[ 3] d15
+38 C1[21] parity
+39 C3[ 5] d40
+40 C0[10] d10
+41 C1[ 4] d16
+42 C1[22] parity
+43 C3[ 6] d41
+44 C0[11] d11
+45 C1[ 5] d17
+46 C2[ 0] d24
+47 C3[ 7] d42
+48 C0[12] parity
+49 C1[ 6] d18
+50 C2[ 1] d25
+51 C3[ 8] d43
+52 C0[13] parity
+53 C1[ 7] d19
+54 C2[ 2] d26
+55 C3[ 9] d44
+56 C0[14] parity
+57 C1[ 8] d20
+58 C2[ 3] d27
+59 C3[10] d45
+60 C0[15] parity
+61 C1[ 9] d21
+62 C2[ 4] d28
+63 C3[11] d46
+64 C0[16] parity
+65 C1[10] d22
+66 C2[ 5] d29
+67 C3[12] d47
+68 C0[17] parity
+69 C1[11] d23
+70 C2[ 6] d30
+71 C3[13] d48

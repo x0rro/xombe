@@ -1,0 +1,10 @@
+prefix=@XOMBE_PC_PREFIX@
+libdir=@XOMBE_PC_LIBDIR@
+includedir=@XOMBE_PC_INCLUDEDIR@
+
+Name: xombe
+Description: DMR (AMBE+2 half rate) and D-STAR (AMBE 2400) vocoder, channel FEC, and transcoders
+Version: @PROJECT_VERSION@
+Libs: -L${libdir} -lxombe@XOMBE_PC_LIBS@
+Libs.private: @XOMBE_PC_LIBS_PRIVATE@
+Cflags: -I${includedir}@XOMBE_PC_CFLAGS@

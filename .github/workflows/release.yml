@@ -1,0 +1,67 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  source:
+    runs-on: ubuntu-24.04
+    container: docker.io/library/debian@sha256:2dc419c6d7fe3dad0a2f9fd469c34cc90b0f9ba642d8fde837fe3d7d34a0e7f1
+    steps:
+      - name: checkout without git, for the locked packages
+        uses: actions/checkout@v4
+      - run: sh scripts/release_deps.sh
+      - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - name: checkout with git
+        uses: actions/checkout@v4
+      - name: tag matches version
+        run: |
+          ver=$(for p in MAJOR MINOR PATCH; do
+              sed -n "s/^#define XOMBE_VERSION_$p \([0-9][0-9]*\)\$/\1/p" include/xombe.h
+          done | paste -sd. -)
+          test "${GITHUB_REF_NAME#v}" = "$ver"
+      - run: scripts/release_tarball.sh HEAD dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: source
+          path: |
+            dist/*.tar.xz
+            dist/*.buildinfo
+          if-no-files-found: error
+
+  release:
+    needs: source
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: source
+          path: out
+      - run: cd out && sha256sum -- xombe-* | LC_ALL=C sort -k2 > SHA256SUMS
+      - name: sums match the tag
+        run: |
+          git fetch -q --depth=1 origin "+$GITHUB_REF:$GITHUB_REF"
+          git for-each-ref --format='%(contents)' "$GITHUB_REF" | grep -E '^[0-9a-f]{64}  xombe-' > tag-sums
+          diff tag-sums out/SHA256SUMS
+      - uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            out/*.tar.xz
+            out/*.buildinfo
+      - name: draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ver=${GITHUB_REF_NAME#v}
+          awk -v h="## $ver" '$0 == h { on = 1; next } on && /^## / { exit } on' CHANGELOG.md > notes.md
+          gh release create "$GITHUB_REF_NAME" --draft --verify-tag \
+            --title "xombe $ver" --notes-file notes.md out/xombe-* out/SHA256SUMS
