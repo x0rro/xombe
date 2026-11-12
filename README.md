@@ -57,6 +57,15 @@ benchmarks on a raspberry pi pico 2 (RP2350):
  - 150 MHz (stock), q15 encoder uses 41% of one core, decoder 6%
  - 200 MHz (no overvolt), three full-duplex channels fit across two cores
 
+## installing
+
+arch linux, from the AUR:
+
+    yay -S xombe       # release
+    yay -S xombe-git   # latest main
+
+everywhere else build from source.
+
 ## building
 
 needs cmake 3.13 and a C99 compiler.
